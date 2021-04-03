@@ -7,7 +7,8 @@ const Search = ({
   commonApiUrl,
   location,
 }) => {
-  const defaultOffset = 10;
+  const defaultOffset = 1;
+  const defaultLimit = 1;
   const hasPrevious = location?.state?.hasPrevious;
   const params = useParams();
   const { name: formattedName, offset } = params;
@@ -15,18 +16,19 @@ const Search = ({
   const history = useHistory()
   const [characters, setCharacters] = useState([])
   const [isLoading, setIsLoading] = useState(true);
+  const [hasNext, sethasNext] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
-  const [selectedCharacter, setSelectedCharacter] = useState(undefined);
-  const [showModal, setShowModal] = useState(false);
+  const url = `${commonApiUrl}/characters?name=${formattedName}&limit=${defaultLimit}0&offset=${offset}`;
 
-  const url = `${commonApiUrl}/characters?name=${formattedName}&limit=10&offset=${offset}`;
-  console.log(url)
   useEffect(() => {
     setIsLoading(true)
     axios.get(url)
       .then((response) => {
         const temporalCharacters = [];
         if (response.data.length) {
+          if (response.data.length === defaultLimit) {
+            sethasNext(true);
+          } 
           response.data.forEach((character) => {
             temporalCharacters.push({
               name: character.name,
@@ -37,7 +39,6 @@ const Search = ({
             })
           })
           setIsEmpty(false)
-          console.log(temporalCharacters)
           setCharacters(temporalCharacters)
         } else {
           setIsEmpty(true)
@@ -58,48 +59,12 @@ const Search = ({
   }
 
   const handleCharacterClick = (character) => {
-    setSelectedCharacter(character);
-    setShowModal(true)
-  }
-  
-  const handleVisitCharacter = (show) => {
-    history.push(`/character/${show.replace(/ /g, '+')}/${selectedCharacter.name.replace(/ /g, '+')}`)
-
+    history.push(`/character/${character.name.replace(/ /g, '+')}`)
   }
 
-  const tooltipBreakingBadHelper = (
-    <Tooltip>
-      El personaje no aparece en Breaking Bad
-    </Tooltip>
-  );
 
-  const tooltipBetterCallSaulHelper = (
-    <Tooltip>
-      El personaje no aparece en Better Call Saul
-    </Tooltip>
-  );
   return(
     <Container>
-      {selectedCharacter && <Modal show={showModal} size="xs">
-      <IconButton style={{alignSelf: 'flex-end'}} icon={<Icon icon="close" />} onClick={() => setShowModal(false)} circle size="xs" />
-        Ver el {selectedCharacter.name} en:
-        <Container style={{flexDirection: 'row'}}>
-          {selectedCharacter.appearances.breakingBad ? (
-            <Button onClick={() => handleVisitCharacter('Breaking Bad')}>Breaking Bad</Button>
-          ) : (
-            <Whisper placement="top" trigger={["hover", "click"]} speaker={tooltipBreakingBadHelper}>
-              <Button appearance="subtle">Breaking Bad</Button>
-            </Whisper>
-          )}
-          {selectedCharacter.appearances.betterCallSaul ? (
-            <Button onClick={() => handleVisitCharacter('Better Call Saul')}>Better Call Saul</Button>
-          ) : (
-            <Whisper placement="top" trigger={["hover", "click"]} speaker={tooltipBetterCallSaulHelper}>
-              <Button appearance="subtle">Better Call Saul</Button>
-            </Whisper>
-          )}
-        </Container>
-      </Modal>}
       <h2>Resultados para: {name}</h2>
       {isLoading ? (
         <Loader center content="Cargando"/>
@@ -129,7 +94,7 @@ const Search = ({
               </Container>
               <Container style={{flexDirection: 'row'}}>
                 {offset > 0 && hasPrevious && <Button onClick={handlePrevious}>Anterior</Button>}
-                {!isEmpty && <Button onClick={handleNext}>Siguiente</Button>}
+                {!isEmpty && hasNext && <Button onClick={handleNext}>Siguiente</Button>}
               </Container>
             </Container>
           )}

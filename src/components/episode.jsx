@@ -38,7 +38,7 @@ const Episode = ({
   []);
 
   const handleCharacterClick = (character) => {
-    history.push(`/character/${serie.replace(/ /g, '+')}/${character.replace(/ /g, '+')}`)
+    history.push(`/character/${character.replace(/ /g, '+')}`, { show: serie})
   }
 
   return (

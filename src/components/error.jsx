@@ -10,7 +10,6 @@ const ErrorComponent = ({
   if (!error) {
     handleClick();
   }
-  console.log(error)
   const handleClick = () => {
     history.push('/');
   }

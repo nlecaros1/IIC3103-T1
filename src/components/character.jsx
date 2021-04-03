@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
-import { Button, Container, List, Loader } from 'rsuite';
+import { Button, ButtonToolbar, Container, List, Loader } from 'rsuite';
 import axios from 'axios';
 
 const Character = ({
-  commonApiUrl
+  commonApiUrl,
+  location,
 }) => {
   const params = useParams();
   const history = useHistory();
-  const { id: formattedName, show: formattedShow } = params; 
+
+  const { id: formattedName } = params; 
+
   const name = formattedName.replace(/\+/g, ' ');
-  const show = formattedShow.replace(/\+/g, ' ');
-  const isBreakingBad = show === 'Breaking Bad';
-  console.log(name, isBreakingBad)
+  const show = location?.state?.show ? location.state.show : 'Breaking Bad';
+  const [isBreakingBad, setIsBreakingBad] = useState(show === 'Breaking Bad');
+  const [breakingBadAppearance, setBreakingBadAppearance] = useState([]);
+  const [betterCallSaulAppearance, setBetterCallSaulAppearance] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
-  const [isFromOtherShow, setIsFromOtherShow] = useState(false);
   
   const [appearance, setAppearance] = useState('');
   const [img, setImg] = useState('');
@@ -26,29 +29,16 @@ const Character = ({
   
 
   const url = `${commonApiUrl}/characters?name=${formattedName}`;
-  console.log(url)
 
   useEffect(() => {
     setIsLoading(true);
     axios.get(url)
       .then((response) => {
-        console.log(response.data)
         if (response.data.length) {
           const character = response.data[0];
-          console.log(character)
-          const interestAppearance = isBreakingBad 
-            ? character.appearance 
-            : character.better_call_saul_appearance;
-          const otherAppearance = !isBreakingBad 
-            ? character.appearance 
-            : character.better_call_saul_appearance;
-          if (!interestAppearance.length) {
-            setIsEmpty(true)
-          } 
-          if (otherAppearance.length) {
-            setIsFromOtherShow(true)
-          }
-          setAppearance(interestAppearance);
+          setBreakingBadAppearance(character.appearance);
+          setBetterCallSaulAppearance(character.better_call_saul_appearance);
+          setAppearance(isBreakingBad ? character.appearance : character.better_call_saul_appearance);
           setImg(character.img);
           setNickname(character.nickname);
           setOccupation(character.occupation);
@@ -57,7 +47,6 @@ const Character = ({
         } else {
           setIsEmpty(true)
         }
-
         setIsLoading(false);
       })
       .catch((error) => {
@@ -67,11 +56,12 @@ const Character = ({
   [params]);
 
   const handleSeasonClick = (season) => {
-    history.push(`/show/${formattedShow}`, { season })
+    history.push(`/show/${isBreakingBad ? 'Breaking+Bad' : 'Better+Call+Saul'}`, { season })
   }
 
-  const handleChangeShowClick = () => {
-    history.push(`/character/${isBreakingBad ? 'Better+Call+Saul' : 'Breaking+Bad'}/${formattedName}`)
+  const handleChangeShowClick = (appearanceToUse, mode) => {
+    setAppearance(appearanceToUse);
+    setIsBreakingBad(mode === 'Breaking Bad')
   }
 
   return(
@@ -83,16 +73,9 @@ const Character = ({
           {isEmpty ? (
             <Container>
             <h1>Lo sentimos, no tenemos registro de {name} en {show}. Revisa que su nombre este bien escrito.</h1>
-            {isFromOtherShow && <a onClick={() => handleChangeShowClick()}>
-              Revisa en {isBreakingBad ? 'Better Call Saul' : 'Breaking Bad'
-            }</a>}
             </Container>
           ) : (
             <Container>
-              {isFromOtherShow ? (
-              <Button onClick={() => handleChangeShowClick()}>Ver en {isBreakingBad ? 'Better Call Saul' : 'Breaking Bad'}</Button>): (
-                <Container/>
-              )}
               <Container>
                 <p>{name}</p>
                 <p>{nickname}</p>
@@ -100,7 +83,7 @@ const Character = ({
                 <p>{status}</p>
               </Container>
               <Container>
-
+                <img src={img} height="240" width="240" />
               </Container>
               <Container>
                 <h3>Ocupaciones</h3>
@@ -113,14 +96,26 @@ const Character = ({
                 </List>
               </Container>
               <Container>
-                <h3>Temporadas</h3>
-                <List hover>
-                  {appearance.map((item, index) => (
-                    <List.Item key={index.toString()} index={index} onClick={() => handleSeasonClick(item)}>
-                      {item}
-                    </List.Item>
-                  ))}
-                </List>
+                <Container>
+                  <h3>Temporadas</h3>
+                  <Container>
+                    <ButtonToolbar>
+                      <Button appearance={isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(breakingBadAppearance, 'Breaking Bad')}>Breaking Bad</Button>
+                      <Button appearance={!isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(betterCallSaulAppearance, 'Better Call Saul')}>Better Call Saul</Button>
+                    </ButtonToolbar>
+                    {appearance.length ? (
+                      <List hover>
+                        {appearance.map((item, index) => (
+                          <List.Item key={index.toString()} index={index} onClick={() => handleSeasonClick(item)}>
+                            {item}
+                          </List.Item>
+                        ))}
+                      </List>
+                    ): (
+                      <p>No aparece en ninguna temporada</p>
+                    )}
+                  </Container>
+                </Container>
               </Container>
 
             </Container>

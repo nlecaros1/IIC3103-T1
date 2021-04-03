@@ -13,7 +13,6 @@ const Show = ({
   if (expandedSeason) {
     expandedSeason = expandedSeason.toString()
   }
-  console.log('Expanded', expandedSeason, typeof expandedSeason)
   const {id: formattedName } = params;
   const url = `${commonApiUrl}/episodes?series=${formattedName}`
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +30,6 @@ const Show = ({
           value: episodeSeason,
           children: [formatEpisodeToTree(episode)]
       }
-      console.log(temporalSeasons[episodeSeason])
     }});
     return temporalSeasons;
   }
@@ -64,7 +62,6 @@ const Show = ({
   []);
 
   const handleSelect = (event) => {
-    console.log(event)
     const eventNameAsArray = event.label.split(' ');
     if (eventNameAsArray[0] !== 'Temporada') {
       history.push(`/episode/${event.value}`)
@@ -75,8 +72,12 @@ const Show = ({
       <h2>{name}</h2>
       {isLoading ? 
       <Loader center content="Cargando"/> 
-    : <Tree data={seasons} defaultExpandItemValues={[expandedSeason]} onSelect={handleSelect}/>}
-    {console.log(seasons)}
+    : (
+      <Container>
+        <h3>{formattedName.replace(/\+/g, ' ')}</h3>
+        <Tree data={seasons} defaultExpandItemValues={[expandedSeason]} onSelect={handleSelect}/>
+      </Container>
+    )}
     </Container>
   )
 }

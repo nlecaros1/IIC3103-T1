@@ -26,7 +26,7 @@ const App = () => {
         <Toolbar />
         <Switch>
           <Route
-            path="/character/:show/:id"
+            path="/character/:id"
             render={(props) => (
               <Character
                 commonApiUrl={commonApiUrl}

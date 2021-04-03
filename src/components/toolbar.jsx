@@ -33,7 +33,7 @@ const  Toolbar = ({}) => {
       <Navbar.Body>
         <Nav>
           <Nav.Item eventKey="1" componentClass={Link} to="/">
-            Heisenberg
+            Heisenpedia
           </Nav.Item>
         </Nav>
         <Nav pullRight>
