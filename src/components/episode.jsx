@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
-import { Container, List, Loader } from 'rsuite';
+import { Button, ButtonToolbar, Container, List, Loader, Icon } from 'rsuite';
 import axios from 'axios';
 import moment from 'moment';
+import colors from '../styles/colors';
 
 const Episode = ({
   commonApiUrl,
@@ -42,7 +43,7 @@ const Episode = ({
   }
 
   return (
-    <Container>
+    <Container style={{margin: 10}}>
       {isLoading ? (
         <Loader center content="Cargando" />
       ) : (
@@ -58,24 +59,47 @@ const Episode = ({
               {title}
             </h2>
           </Container>
-          <Container>
-            <p>
-              Lanzada:
-              {moment(airDate).format('dd-mm-yyyy')}
+          <Container style={{backgroundColor: colors.black, color: colors.white, padding: 10, margin: 10, borderRadius: 10, flexDirection: 'row'}}>
+            <Container>
+              <p onClick={() => history.push(`/show/${serie.replace(/ /g, '+')}`, { season })}>
+                Temporada:
+                {' '}
+                {season}
+              </p>
+              <p>
+                Capítulo:
+                {' '}
+                {episodeNumber}
+              </p>
+            </Container>
+            <Container>
+              <p>
+                Lanzada:
+                {' '}
+                {moment(airDate).format('DD/MM/YYYY')}
+              </p>
+              <p onClick={() => history.push(`/show/${serie.replace(/ /g, '+')}`)}>
+                Serie:
+                {' '}
+                {serie}
             </p>
-            <p>
-              {serie}
-            </p>
-            <List hover>
-              {characters.map((item, index) => (
-                <List.Item key={index.toString()} index={index} onClick={() => handleCharacterClick(item)}>
-                  {item}
-                </List.Item>
-              ))}
-            </List>
-          </Container>
-        </Container>
+            </Container>
 
+          </Container>
+          <Container style={{padding: 10}}>
+            <h4>Personajes {<Icon icon="user" size="2x"/>}</h4>
+              {characters.map((item, index) => (
+                <ButtonToolbar
+                  key={index.toString()}
+                  onClick={() => handleCharacterClick(item)}
+                  style={{flex: 1, width: '100%'}}
+                  >
+                  <Button appearance="subtle">{index + 1}</Button>
+                  <Button appearance="subtle">{item}</Button>
+                </ButtonToolbar>
+              ))}
+          </Container>
+          </Container>
       )}
     </Container>
   );

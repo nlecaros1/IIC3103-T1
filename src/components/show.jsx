@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { Container, Loader, Tree, Button, Panel, ButtonToolbar, ButtonGroup, IconButton, Icon } from 'rsuite';
+import { Container, Loader, Tree, Button, Panel, ButtonToolbar, ButtonGroup, } from 'rsuite';
 import axios from 'axios'
 import { useHistory, useParams } from 'react-router';
 import moment from 'moment';
@@ -20,7 +20,6 @@ const Show = ({
     }, []);
     return screenSize;
   };
-  
 
   const [width, height] = useMediaQuery();
   const history = useHistory()
@@ -28,13 +27,13 @@ const Show = ({
   const name = location?.state?.name;
   let expandedSeason = location?.state?.season;
   if (expandedSeason) {
-    expandedSeason = expandedSeason.toString()
+    expandedSeason = parseInt(expandedSeason) - 1;
   }
   const {id: formattedName } = params;
   const url = `${commonApiUrl}/episodes?series=${formattedName}`
   const [isLoading, setIsLoading] = useState(true);
   const [seasons, setSeasons] = useState({});
-  const [selectedSeason, setSelectedSeason] = useState('');
+  const [selectedSeason, setSelectedSeason] = useState(expandedSeason !== undefined ? expandedSeason : '');
 
   const formatDataToSeasons = (data) => {
     const temporalSeasons = {}
@@ -220,7 +219,6 @@ const Show = ({
             )}
           </Container>
         </Container>
-        {/* <Tree data={seasons} height={height} style={{backgroundColor: 'red', height: height, flex: 1 }} defaultExpandItemValues={[expandedSeason]} onSelect={handleSelect}/> */}
       </Container>
     )}
     </Container>
