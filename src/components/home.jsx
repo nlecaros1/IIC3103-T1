@@ -1,12 +1,8 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import { useHistory } from 'react-router';
-import { Container, Divider, Loader, Panel, Button} from 'rsuite';
-import colors from '../styles/colors';
-import Show from './show'
+import { Container,  Panel, Button} from 'rsuite';
 
-const Home = ({
-  commonApiUrl
-}) => {
+const Home = ({}) => {
   const useMediaQuery = () => {
     const [screenSize, setScreenSize] = useState([0, 0]);
     useLayoutEffect(() => {
@@ -19,10 +15,9 @@ const Home = ({
     }, []);
     return screenSize;
   };
-  
 
-  const history = useHistory();
   const [width, height] = useMediaQuery();
+  const history = useHistory();
 
   const Card = ({
     name, url, index, imageSource,height, width
@@ -54,7 +49,6 @@ const Home = ({
     </Button>
   );
 
-
   return(
     <Container >
       <Container >
@@ -73,7 +67,6 @@ const Home = ({
           index="2"
           height={height/2 - 50}
           width={width}
-
         />
       </Container>
     </Container>
@@ -89,6 +82,7 @@ const styles = {
     display: 'inline-block', position: 'relative', width: '100%', flex: 1
   },
   image: { objectFit: 'cover', filter: 'brightness(70%)', alignSelf: 'center' },
+  title: { textAlign: 'center', fontSize: 20,  alignSelf: 'center', justifySelf: 'center' },
 };
 
 export default Home;

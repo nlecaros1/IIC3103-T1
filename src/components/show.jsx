@@ -1,11 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Loader, Tree } from 'rsuite';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { Container, Loader, Tree, Button, Panel, ButtonToolbar, ButtonGroup, IconButton, Icon } from 'rsuite';
 import axios from 'axios'
 import { useHistory, useParams } from 'react-router';
+import moment from 'moment';
+import colors from '../styles/colors';
 
 const Show = ({
   commonApiUrl, location,
 }) => {
+  const useMediaQuery = () => {
+    const [screenSize, setScreenSize] = useState([0, 0]);
+    useLayoutEffect(() => {
+      function updateScreenSize() {
+        setScreenSize([window.innerWidth, window.innerHeight]);
+      }
+      window.addEventListener('resize', updateScreenSize);
+      updateScreenSize();
+      return () => window.removeEventListener('resize', updateScreenSize);
+    }, []);
+    return screenSize;
+  };
+  
+
+  const [width, height] = useMediaQuery();
   const history = useHistory()
   const params = useParams();
   const name = location?.state?.name;
@@ -17,6 +34,7 @@ const Show = ({
   const url = `${commonApiUrl}/episodes?series=${formattedName}`
   const [isLoading, setIsLoading] = useState(true);
   const [seasons, setSeasons] = useState({});
+  const [selectedSeason, setSelectedSeason] = useState('');
 
   const formatDataToSeasons = (data) => {
     const temporalSeasons = {}
@@ -37,6 +55,7 @@ const Show = ({
   const formatEpisodeToTree = (episode) => ({
     label: `${episode.title}`,
     value: episode.episode_id,
+    ...episode
   })
 
   const formatSeasonsToTree = (seasons) => {
@@ -61,25 +80,164 @@ const Show = ({
     }, 
   []);
 
-  const handleSelect = (event) => {
-    const eventNameAsArray = event.label.split(' ');
-    if (eventNameAsArray[0] !== 'Temporada') {
-      history.push(`/episode/${event.value}`)
-    }
-  }
+  const Card = ({
+    index, imageSource,height, width
+  }) => (
+    <Button
+      appearance="subtle"
+      key={index}
+      style={styles.card}
+    >
+      <Panel
+        key={index}
+        bodyFill
+        style={{...styles.panel, height}}
+      >
+        <img
+          src={imageSource}
+          height={height}
+          style={styles.image}
+          alt=""
+          width={width}
+        />
+        <p style={styles.text}>
+          {name}
+        </p>
+      </Panel>
+    </Button>
+  );
+
+  const Season = ({ season }) => {
+    return(
+      <Button
+        appearance={season.value - 1 === selectedSeason ? 'default' : 'subtle'}
+        onClick={() => setSelectedSeason(season.value - 1)}
+        >
+          {season.label}
+        </Button>
+    )
+  };
+  const Episode = ({ episode, index }) => {
+    return(
+      <ButtonToolbar
+        onClick={() => history.push(`/episode/${episode.value}`)}
+        style={styles.episodes}
+      >
+        <ButtonGroup justified>
+            <Button
+              appearance={'subtle'}
+              >
+                {index}
+              </Button>
+            <Button
+              appearance={'subtle'}
+              >
+                {episode.label}
+              </Button>
+              <Button
+                appearance={'subtle'}>
+                {episode.characters.length}
+                </Button>
+            <Button
+              appearance={'subtle'}>
+                {moment(episode.air_date).format('DD/MM/YYYY')}
+            </Button>
+          </ButtonGroup>
+    </ButtonToolbar>
+    )
+  };
+
   return(
-    <Container style={{height: '100%', backgroundColor: 'blue'}}>
-      <h2>{name}</h2>
+    <Container>
       {isLoading ? 
-      <Loader center content="Cargando"/> 
+      <Container> 
+        <Loader center content="Cargando"/> 
+      </Container>
     : (
       <Container>
-        <h3>{formattedName.replace(/\+/g, ' ')}</h3>
-        <Tree data={seasons} defaultExpandItemValues={[expandedSeason]} onSelect={handleSelect}/>
+        <Card 
+          name={name}
+          imageSource={
+            name === 'Breaking Bad'
+            ? "https://i.blogs.es/6d84c8/breaking-bad/1366_2000.jpg"
+            : "http://www.srgeekarg.com/wp-content/uploads/2020/04/Better-Call-Saul-temporada-cinco-min.jpg"
+          }
+          index="1"
+          height={height/2 - 50}
+          width={width}
+        />
+        <Container style={{flexDirection: 'row'}}>
+          <Container style={{flex: 1}}> 
+            <h2 style={styles.textCenter}>Temporadas</h2>
+            <Button appearance="subtle" style={{color: colors.white}} onClick={() => setSelectedSeason('')}>''</Button>
+            {seasons.map((season) => {
+              return(
+                <Season
+                  season={season}
+                  />
+              )
+            })}
+          </Container>
+          <Container style={{flex: 2}}> 
+            <h2 style={{textAlign: 'center'}}>Capítulos</h2>
+            {selectedSeason !== ''? (
+              <Container>
+                <ButtonToolbar
+                    style={styles.episodes}
+                  >
+                    <ButtonGroup justified>
+                      <Button
+                        appearance={'default'}
+                        >
+                          Número
+                        </Button>
+                      <Button
+                        appearance={'default'}
+                        >
+                          Nombre
+                        </Button>
+                      <Button>
+                        # Personajes
+                      </Button>
+                      <Button
+                        appearance={'default'}
+                        >
+                        Lanzamiento
+                      </Button>
+                    </ButtonGroup>
+                </ButtonToolbar>
+              {
+              seasons[selectedSeason].children.map((episode, index) => {
+              return(
+                <Episode
+                  episode={episode}
+                  index={index + 1}
+                  />
+              )
+            })}
+            </Container>) : (
+              <p style={styles.textCenter}>Selecciona una temporada</p>
+            )}
+          </Container>
+        </Container>
+        {/* <Tree data={seasons} height={height} style={{backgroundColor: 'red', height: height, flex: 1 }} defaultExpandItemValues={[expandedSeason]} onSelect={handleSelect}/> */}
       </Container>
     )}
     </Container>
   )
 }
+
+const styles = {
+  title: { textAlign: 'center', fontSize: 20, marginBottom: 15 },
+  card: {
+    flex: 1, width: '100%', hover: 'pointer',
+  },
+  panel: {
+    display: 'inline-block', position: 'relative', width: '100%', flex: 1
+  },
+  image: { objectFit: 'cover', filter: 'brightness(70%)', alignSelf: 'center' },
+  textCenter: {textAlign: 'center'},
+  episodes: {flex: 1, width: '100%'},
+};
 
 export default Show;
