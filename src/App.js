@@ -15,6 +15,7 @@ import Episode from './components/episode';
 import Home from './components/home';
 import Search from './components/search';
 import Show from './components/show';
+import ErrorComponent from './components/error';
 import Toolbar from './components/toolbar';
 
 const App = () => {
@@ -56,6 +57,14 @@ const App = () => {
             render={(props) => (
               <Search
                 commonApiUrl={commonApiUrl}
+                {...props}
+              />
+            )}
+          />
+          <Route
+            path="/error"
+            render={(props) => (
+              <ErrorComponent
                 {...props}
               />
             )}

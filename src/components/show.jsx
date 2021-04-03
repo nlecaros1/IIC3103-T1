@@ -57,9 +57,9 @@ const Show = ({
           setSeasons(temporalSeasonsAsArray);
           setIsLoading(false)
       })
-      .catch(function (error) {
-        console.log(error);
-      })
+      .catch((error) => {
+        history.push('/error', { error })
+      });
     }, 
   []);
 

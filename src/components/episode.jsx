@@ -32,7 +32,7 @@ const Episode = ({
         setIsLoading(false);
       })
       .catch((error) => {
-        console.log(error);
+        history.push('/error', { error })
       });
   },
   []);
