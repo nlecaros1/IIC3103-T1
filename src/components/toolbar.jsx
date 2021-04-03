@@ -1,11 +1,8 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-
 import {
-  Navbar, Dropdown, Alert, Nav,InputGroup,Input, Container
+  Navbar, Nav, InputGroup,Input, Container, Icon,
 } from 'rsuite';
-import { Icon } from 'rsuite';
-// import Nav from '@rsuite/responsive-nav';
 import colors from '../styles/colors';
 import { useState, } from 'react';
 
@@ -19,7 +16,7 @@ const  Toolbar = ({}) => {
     history.push(`/search/${formattedText}/0`)
   }
   return (
-    <Navbar appearance="default">
+    <Navbar appearance="default" style={styles.navbar}>
       <Navbar.Header>
       {/* <Nav.Item eventKey="1" componentClass={Link} to="/" style={{alignContent: 'center', justifyContent: 'center'}}>
             <img
@@ -33,12 +30,12 @@ const  Toolbar = ({}) => {
       <Navbar.Body>
         <Nav>
           <Nav.Item eventKey="1" componentClass={Link} to="/">
-            Heisenpedia
+            <p style={styles.logoText}>SAY MY NAME</p>
           </Nav.Item>
         </Nav>
         <Nav pullRight>
-          <Container style={{alignSelf: 'center', justifySelf: 'center', alignItems: 'center', justifyContent: 'center', justifyItems: 'center', backgroundColor: 'red'}}>
-            <InputGroup style={{alignSelf: 'center', justifySelf: 'center', alignItems: 'center', justifyContent: 'center', justifyItems: 'center',}}>
+          <Container style={styles.searchBoxContainer}>
+            <InputGroup style={styles.searchBox}>
               <Input onChange={setSearchText} onPressEnter={submitSearch}/>
               <InputGroup.Addon>
                 <Icon icon="search" onClick={submitSearch}/>
@@ -52,9 +49,9 @@ const  Toolbar = ({}) => {
 };
 
 const styles = {
-  width: 300,
-  marginBottom: 10,
-  alignSelf: 'center',
-  justifySelf: 'center'
+  logoText: { color: colors.white, fontWeight: 'bold' },
+  navbar: { backgroundColor: colors.black, color: colors.white },
+  searchBox: { alignSelf: 'center', justifySelf: 'center', borderRadius: 10 },
+  searchBoxContainer: { padding: 10 },
 };
 export default Toolbar;
