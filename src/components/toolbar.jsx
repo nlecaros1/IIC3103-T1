@@ -22,14 +22,16 @@ const  Toolbar = ({}) => {
   return (
     <Navbar appearance="default" style={styles.navbar}>
       <Navbar.Header>
-        <Nav.Item eventKey="1" componentClass={Link} to="/">
+        <Nav>
+          <Nav.Item eventKey="1" componentClass={Link} to="/">
             <img
-              style={{alignSelf: 'center', justifySelf: 'center', marginTop: -25, zIndex: 19}}
+              style={styles.logo}
               src="/images/logo.png"
               alt="home"
-              height={50}
+              width="30"
             />
           </Nav.Item>
+        </Nav>
       </Navbar.Header>
       <Navbar.Body>
         <Nav>
@@ -54,6 +56,7 @@ const  Toolbar = ({}) => {
 
 const styles = {
   logoText: { color: colors.white, fontWeight: 'bold' },
+  logo: { marginTop: -5, alignSelf: 'center' },
   navbar: { backgroundColor: colors.black, color: colors.white },
   searchBox: { alignSelf: 'center', justifySelf: 'center', borderRadius: 10 },
   searchBoxContainer: { padding: 10 },
