@@ -1,5 +1,7 @@
+// La función useMediaQuery fue obtenida de https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react
+
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { Container, Loader, Tree, Button, Panel, ButtonToolbar, ButtonGroup, Alert, } from 'rsuite';
+import { Container, Loader, Button, Panel, ButtonToolbar, ButtonGroup, Alert, } from 'rsuite';
 import axios from 'axios'
 import { useHistory, useParams } from 'react-router';
 import moment from 'moment';
@@ -30,7 +32,7 @@ const Show = ({
   }
   const {id: formattedName } = params;
   const name = formattedName.replace(/\+/g, ' ');
-  if (!(name in ['Breaking Bad', 'Better Call Saul'])) {
+  if (name !=='Breaking Bad' && name !== 'Better Call Saul') {
     Alert.error(`No existe el show '${name}'. Se muestra Better Call Saul.`)
   }
   const url = `${commonApiUrl}/episodes?series=${formattedName}`

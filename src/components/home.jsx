@@ -1,3 +1,5 @@
+// La función useMediaQuery fue obtenida de https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react
+
 import React, { useState, useLayoutEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Container,  Panel, Button} from 'rsuite';
@@ -39,7 +41,7 @@ const Home = ({}) => {
           src={imageSource}
           height={height}
           style={styles.image}
-          alt=""
+          alt={name}
           width={width}
         />
         <p style={styles.text}>

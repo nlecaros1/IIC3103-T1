@@ -23,7 +23,7 @@ const Search = ({
   const [hasNext, sethasNext] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const url = `${commonApiUrl}/characters?name=${formattedName}&limit=${defaultLimit}&offset=${offset}`;
-
+  
   useEffect(() => {
     setIsLoading(true)
     axios.get(url)

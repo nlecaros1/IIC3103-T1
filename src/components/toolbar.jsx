@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import {
-  Navbar, Nav, InputGroup,Input, Container, Icon,
+  Navbar, Nav, InputGroup,Input, Container, Icon, Alert,
 } from 'rsuite';
 import colors from '../styles/colors';
 import { useState, } from 'react';
@@ -13,19 +13,23 @@ const  Toolbar = ({}) => {
   
   const submitSearch = () => {
     const formattedText = searchText.replace(/ /g, '+');
-    history.push(`/search/${formattedText}/0`)
+    if (formattedText.length > 0) {
+      history.push(`/search/${formattedText}/0`)
+    } else {
+      Alert.error('Ingrese texto a buscar.')
+    }
   }
   return (
     <Navbar appearance="default" style={styles.navbar}>
       <Navbar.Header>
-      {/* <Nav.Item eventKey="1" componentClass={Link} to="/" style={{alignContent: 'center', justifyContent: 'center'}}>
+        <Nav.Item eventKey="1" componentClass={Link} to="/">
             <img
-            style={{alignSelf: 'center'}}
-            src="/images/logo.jpeg"
-            alt="home"
-            width="30"
+              style={{alignSelf: 'center', justifySelf: 'center', marginTop: -25, zIndex: 19}}
+              src="/images/logo.png"
+              alt="home"
+              height={50}
             />
-          </Nav.Item> */}
+          </Nav.Item>
       </Navbar.Header>
       <Navbar.Body>
         <Nav>
