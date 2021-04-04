@@ -17,3 +17,4 @@ El sitio se encuentra publicado en el siguiente [link](https://say-my-name-wiki-
     - [Breaking Bad](https://i.blogs.es/6d84c8/breaking-bad/1366_2000.jpg)
     - [Better Call Saul](http://www.srgeekarg.com/wp-content/uploads/2020/04/Better-Call-Saul-temporada-cinco-min.jpg)
     - [Logo](https://juicebubble.co.za/product-category/hoodies/page/5/)
+    - [`favicon.ico`] (https://www.favicon.cc/?action=icon&file_id=800084)
