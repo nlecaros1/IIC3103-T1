@@ -5,20 +5,26 @@ import { Button, Container } from 'rsuite';
 const ErrorComponent = ({
   location
 }) => {
-  const error = location?.state?.error;
-  const history = useHistory();
-  if (!error) {
-    handleClick();
-  }
+
   const handleClick = () => {
     history.push('/');
   }
+  const error = location?.state?.error;
+  const history = useHistory();
+  console.log(error, error === undefined)
+  if (error === undefined) {
+    handleClick();
+  }
   return(
     <Container>
-      <h2>Lo sentimos, hubo un error con la API. Trate nuevamente.</h2>
-      <p>{error.status}</p>
-      <p>{error.message}</p>
-      <Button onClick={handleClick} >Inicio</Button>
+      {error !== undefined && (
+      <Container>
+        <h2>Lo sentimos, hubo un error con la API. Trate nuevamente.</h2>
+        <p>{error.status}</p>
+        <p>{error.message}</p>
+        <Button onClick={handleClick} >Inicio</Button>
+      </Container>
+      )}
       </Container>
   )
 }

@@ -80,64 +80,92 @@ const Character = ({
             <h1>Lo sentimos, no tenemos registro de {name} en {show}. Revisa que su nombre este bien escrito.</h1>
             </Container>
           ) : (
-            <Container style={{ margin: 10 }}>
-              <Container style={{ flexDirection: 'row', borderRadius: 10, backgroundColor: colors.black, color: colors.white}}>
-                <Container style={{padding: 10}}>
+            <Container style={styles.generalContainer}>
+              <Container style={styles.imageAndInformationContainer}>
+                <Container style={styles.generalInformationContainer}>
                   <Container>
                     <Container>
                       <h3>{name}</h3>
                     </Container>
                     <Divider style={{color: colors.gray}}/>
-                    <Container style={{ backgroundColor: colors.black, margin: 10, }}>
-                      <p style={{marginLeft: 10}}>- Apodo: {nickname}</p>
-                      <p style={{marginLeft: 10}}>- Estado: {status}</p>
-                      <p style={{marginLeft: 10}}>- Actor/Actriz{portrayed}</p>
+                    <Container style={styles.informationContainer}>
+                      <p style={styles.informationText}>- Apodo: {nickname}</p>
+                      <p style={styles.informationText}>- Estado: {status}</p>
+                      <p style={styles.informationText}>- Actor/Actriz{portrayed}</p>
                     </Container>
                   </Container>
                   <Container>
                     <h4>Ocupaciones</h4>
                       {occupation.map((item, index) => (
-                        <p style={{marginLeft: 10}}>- {item}</p>
+                        <p key={index.toString()} style={styles.informationText}>- {item}</p>
                       ))}
                   </Container>
                 </Container>
                 <Container>
-                  <img src={img} height={getImageDimensions()} width={getImageDimensions()} style={{borderTopRightRadius: 10, borderBottomRightRadius: 10, alignSelf: 'flex-end'}}/>
+                  <img 
+                    src={img}
+                    height={getImageDimensions()}
+                    alt={name}
+                    width={getImageDimensions()}
+                    style={styles.image}
+                    />
                 </Container>
               </Container>
               <Container>
-                <Container style={{margin: 10, marginTop: 20}}>
-                  <h4 style={{textAlign: 'center'}}>Temporadas</h4>
+                <Container style={styles.seasonsContainer}>
+                  <h4 style={styles.text}>Temporadas</h4>
                   <Container>
-                    <ButtonToolbar style={{alignSelf: 'center'}}>
+                    <ButtonToolbar style={styles.buttons}>
                       <ButtonGroup>
-                        <Button appearance={isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(breakingBadAppearance, 'Breaking Bad')}>Breaking Bad</Button>
-                        <Button appearance={!isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(betterCallSaulAppearance, 'Better Call Saul')}>Better Call Saul</Button>
+                        <Button
+                          active={isBreakingBad}
+                          appearance="default"
+                          onClick={() => handleChangeShowClick(breakingBadAppearance, 'Breaking Bad')}
+                          >Breaking Bad
+                        </Button>
+                        <Button
+                          active={!isBreakingBad}
+                          appearance="default"
+                          onClick={() => handleChangeShowClick(betterCallSaulAppearance, 'Better Call Saul')}
+                          >
+                          Better Call Saul
+                        </Button>
                       </ButtonGroup>
                     </ButtonToolbar>
                     <Divider />
                     {appearance.length ? (
-                      <ButtonToolbar style={{alignSelf: 'center'}}>
+                      <ButtonToolbar style={styles.buttons}>
                         {appearance.map((item, index) => (
                           <Button key={index.toString()} index={index} onClick={() => handleSeasonClick(item)}>
                             {item}
                           </Button>
                         ))}
-
                       </ButtonToolbar>
                     ): (
-                      <p style={{textAlign: 'center'}}>No aparece en ninguna temporada</p>
+                      <p style={styles.text}>No aparece en ninguna temporada</p>
                     )}
                   </Container>
                 </Container>
               </Container>
-
             </Container>
           )}
         </Container>
       )}
     </Container>
   )
+};
+
+const styles = {
+  text: { textAlign: 'center' },
+  buttons: { alignSelf: 'center' },
+  seasonsContainer: { margin: 10, marginTop: 20 },
+  image: {borderTopRightRadius: 10, borderBottomRightRadius: 10, alignSelf: 'flex-end'},
+  informationText: { marginLeft: 10 },
+  informationContainer: { backgroundColor: colors.black, margin: 10 },
+  generalInformationContainer: { padding: 10 },
+  imageAndInformationContainer: { flexDirection: 'row', borderRadius: 10, backgroundColor: colors.black, color: colors.white },
+  generalContainer: { margin: 10 },
+
 }
 
 export default Character;

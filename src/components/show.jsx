@@ -30,6 +30,9 @@ const Show = ({
   }
   const {id: formattedName } = params;
   const name = formattedName.replace(/\+/g, ' ');
+  if (!(name in ['Breaking Bad', 'Better Call Saul'])) {
+    Alert.error(`No existe el show '${name}'. Se muestra Better Call Saul.`)
+  }
   const url = `${commonApiUrl}/episodes?series=${formattedName}`
   const [isLoading, setIsLoading] = useState(true);
   const [seasons, setSeasons] = useState({});
@@ -114,7 +117,8 @@ const Show = ({
   const Season = ({ season }) => {
     return(
       <Button
-        appearance={season.value - 1 === selectedSeason ? 'default' : 'subtle'}
+        appearance="subtle"
+        active={season.value - 1 === selectedSeason}
         onClick={() => setSelectedSeason(season.value - 1)}
         >
           {season.label}
@@ -126,23 +130,30 @@ const Show = ({
       <ButtonToolbar
         onClick={() => history.push(`/episode/${episode.value}`)}
         style={styles.episodes}
+        key={episode.value.toString()}
       >
-        <ButtonGroup justified>
+        <ButtonGroup
+          key={episode.value.toString() + '-1'}
+          justified
+          >
             <Button
               appearance={'subtle'}
+              key={episode.value.toString() + '-2'}
               >
                 {index}
-              </Button>
+            </Button>
             <Button
               appearance={'subtle'}
               >
                 {episode.label}
-              </Button>
-              <Button
-                appearance={'subtle'}>
-                {episode.characters.length}
-                </Button>
+            </Button>
             <Button
+              key={episode.value.toString() + '-3'}
+              appearance={'subtle'}>
+                {episode.characters.length}
+            </Button>
+            <Button
+              key={episode.value.toString() + '-4'}
               appearance={'subtle'}>
                 {moment(episode.air_date).format('DD/MM/YYYY')}
             </Button>
@@ -216,6 +227,7 @@ const Show = ({
                 <Episode
                   episode={episode}
                   index={index + 1}
+                  key={index.toString()}
                   />
               )
             })}
