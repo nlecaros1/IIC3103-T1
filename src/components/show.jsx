@@ -176,8 +176,8 @@ const Show = ({
           name={name}
           imageSource={
             name === 'Breaking Bad'
-            ? "https://i.blogs.es/6d84c8/breaking-bad/1366_2000.jpg"
-            : "http://www.srgeekarg.com/wp-content/uploads/2020/04/Better-Call-Saul-temporada-cinco-min.jpg"
+            ? "/images/breaking_bad.jpeg"
+            : "/images/better_call_saul.jpeg"
           }
           index="1"
           height={height/2 - 50}

@@ -57,7 +57,7 @@ const Home = ({}) => {
         <Card 
           name="Breaking Bad"
           url="/show/Breaking+Bad"
-          imageSource="https://i.blogs.es/6d84c8/breaking-bad/1366_2000.jpg"
+          imageSource="/images/breaking_bad.jpeg"
           index="1"
           height={height/2 - 50}
           width={width}
@@ -65,7 +65,7 @@ const Home = ({}) => {
         <Card 
           name="Better Call Saul"
           url="/show/Better+Call+Saul"
-          imageSource="http://www.srgeekarg.com/wp-content/uploads/2020/04/Better-Call-Saul-temporada-cinco-min.jpg"
+          imageSource="/images/better_call_saul.jpeg"
           index="2"
           height={height/2 - 50}
           width={width}
