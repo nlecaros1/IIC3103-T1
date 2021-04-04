@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
-import { Container, Loader, Tree, Button, Panel, ButtonToolbar, ButtonGroup, } from 'rsuite';
+import { Container, Loader, Tree, Button, Panel, ButtonToolbar, ButtonGroup, Alert, } from 'rsuite';
 import axios from 'axios'
 import { useHistory, useParams } from 'react-router';
 import moment from 'moment';
@@ -24,12 +24,12 @@ const Show = ({
   const [width, height] = useMediaQuery();
   const history = useHistory()
   const params = useParams();
-  const name = location?.state?.name;
   let expandedSeason = location?.state?.season;
   if (expandedSeason) {
     expandedSeason = parseInt(expandedSeason) - 1;
   }
   const {id: formattedName } = params;
+  const name = formattedName.replace(/\+/g, ' ');
   const url = `${commonApiUrl}/episodes?series=${formattedName}`
   const [isLoading, setIsLoading] = useState(true);
   const [seasons, setSeasons] = useState({});
@@ -71,6 +71,11 @@ const Show = ({
           const temporalSeasonsAsObject = formatDataToSeasons(response.data)
           const temporalSeasonsAsArray = formatSeasonsToTree(temporalSeasonsAsObject)
           setSeasons(temporalSeasonsAsArray);
+          if (selectedSeason + 1 > temporalSeasonsAsArray.length) {
+            const temporalExandedSeason = selectedSeason + 1;
+            setSelectedSeason('');
+            Alert.error(`Lo sentimos, no existe la temporada ${temporalExandedSeason}`);
+          }
           setIsLoading(false)
       })
       .catch((error) => {

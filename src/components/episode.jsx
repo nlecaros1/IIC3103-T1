@@ -43,7 +43,7 @@ const Episode = ({
   }
 
   return (
-    <Container style={{margin: 10}}>
+    <Container style={styles.generalContainer}>
       {isLoading ? (
         <Loader center content="Cargando" />
       ) : (
@@ -59,7 +59,7 @@ const Episode = ({
               {title}
             </h2>
           </Container>
-          <Container style={{backgroundColor: colors.black, color: colors.white, padding: 10, margin: 10, borderRadius: 10, flexDirection: 'row'}}>
+          <Container style={styles.information}>
             <Container>
               <p onClick={() => history.push(`/show/${serie.replace(/ /g, '+')}`, { season })}>
                 Temporada:
@@ -86,13 +86,13 @@ const Episode = ({
             </Container>
 
           </Container>
-          <Container style={{padding: 10}}>
+          <Container style={styles.characters}>
             <h4>Personajes {<Icon icon="user" size="2x"/>}</h4>
               {characters.map((item, index) => (
                 <ButtonToolbar
                   key={index.toString()}
                   onClick={() => handleCharacterClick(item)}
-                  style={{flex: 1, width: '100%'}}
+                  style={styles.character}
                   >
                   <Button appearance="subtle">{index + 1}</Button>
                   <Button appearance="subtle">{item}</Button>
@@ -105,4 +105,17 @@ const Episode = ({
   );
 };
 
+const styles = {
+  generalContainer: { margin: 10 },
+  character: { flex: 1, width: '100%' },
+  characters: { padding: 10 },
+  information: {
+    backgroundColor: colors.black,
+    color: colors.white,
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
+    flexDirection: 'row'
+  },
+}
 export default Episode;

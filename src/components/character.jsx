@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
-import { Button, ButtonToolbar, Container, List, Loader } from 'rsuite';
+import { Button, ButtonGroup, ButtonToolbar, Container, Divider, List, Loader } from 'rsuite';
 import axios from 'axios';
+import colors from '../styles/colors';
 
 const Character = ({
   commonApiUrl,
@@ -26,7 +27,6 @@ const Character = ({
   const [occupation, setOccupation] = useState('');
   const [portrayed, setPortrayed] = useState('');
   const [status, setStatus] = useState('');
-  
 
   const url = `${commonApiUrl}/characters?name=${formattedName}`;
 
@@ -64,6 +64,11 @@ const Character = ({
     setIsBreakingBad(mode === 'Breaking Bad')
   }
 
+  const getImageDimensions = () => {
+    const height = 20 * occupation.length + 8 * (occupation.length - 1)  + 34 + 187 + 20
+    return height;
+  }
+
   return(
     <Container>
       {isLoading ? (
@@ -75,44 +80,53 @@ const Character = ({
             <h1>Lo sentimos, no tenemos registro de {name} en {show}. Revisa que su nombre este bien escrito.</h1>
             </Container>
           ) : (
-            <Container>
-              <Container>
-                <p>{name}</p>
-                <p>{nickname}</p>
-                <p>{portrayed}</p>
-                <p>{status}</p>
-              </Container>
-              <Container>
-                <img src={img} height="240" width="240" />
-              </Container>
-              <Container>
-                <h3>Ocupaciones</h3>
-                <List hover>
-                  {occupation.map((item, index) => (
-                    <List.Item key={index.toString()} index={index}>
-                      {item}
-                    </List.Item>
-                  ))}
-                </List>
-              </Container>
-              <Container>
-                <Container>
-                  <h3>Temporadas</h3>
+            <Container style={{ margin: 10 }}>
+              <Container style={{ flexDirection: 'row', borderRadius: 10, backgroundColor: colors.black, color: colors.white}}>
+                <Container style={{padding: 10}}>
                   <Container>
-                    <ButtonToolbar>
-                      <Button appearance={isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(breakingBadAppearance, 'Breaking Bad')}>Breaking Bad</Button>
-                      <Button appearance={!isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(betterCallSaulAppearance, 'Better Call Saul')}>Better Call Saul</Button>
+                    <Container>
+                      <h3>{name}</h3>
+                    </Container>
+                    <Divider style={{color: colors.gray}}/>
+                    <Container style={{ backgroundColor: colors.black, margin: 10, }}>
+                      <p style={{marginLeft: 10}}>- Apodo: {nickname}</p>
+                      <p style={{marginLeft: 10}}>- Estado: {status}</p>
+                      <p style={{marginLeft: 10}}>- Actor/Actriz{portrayed}</p>
+                    </Container>
+                  </Container>
+                  <Container>
+                    <h4>Ocupaciones</h4>
+                      {occupation.map((item, index) => (
+                        <p style={{marginLeft: 10}}>- {item}</p>
+                      ))}
+                  </Container>
+                </Container>
+                <Container>
+                  <img src={img} height={getImageDimensions()} width={getImageDimensions()} style={{borderTopRightRadius: 10, borderBottomRightRadius: 10, alignSelf: 'flex-end'}}/>
+                </Container>
+              </Container>
+              <Container>
+                <Container style={{margin: 10, marginTop: 20}}>
+                  <h4 style={{textAlign: 'center'}}>Temporadas</h4>
+                  <Container>
+                    <ButtonToolbar style={{alignSelf: 'center'}}>
+                      <ButtonGroup>
+                        <Button appearance={isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(breakingBadAppearance, 'Breaking Bad')}>Breaking Bad</Button>
+                        <Button appearance={!isBreakingBad ? 'default' : 'subtle'} onClick={() => handleChangeShowClick(betterCallSaulAppearance, 'Better Call Saul')}>Better Call Saul</Button>
+                      </ButtonGroup>
                     </ButtonToolbar>
+                    <Divider />
                     {appearance.length ? (
-                      <List hover>
+                      <ButtonToolbar style={{alignSelf: 'center'}}>
                         {appearance.map((item, index) => (
-                          <List.Item key={index.toString()} index={index} onClick={() => handleSeasonClick(item)}>
+                          <Button key={index.toString()} index={index} onClick={() => handleSeasonClick(item)}>
                             {item}
-                          </List.Item>
+                          </Button>
                         ))}
-                      </List>
+
+                      </ButtonToolbar>
                     ): (
-                      <p>No aparece en ninguna temporada</p>
+                      <p style={{textAlign: 'center'}}>No aparece en ninguna temporada</p>
                     )}
                   </Container>
                 </Container>
