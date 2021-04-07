@@ -14,6 +14,7 @@ export default {
   link: '#0496FF',
   gray: '#D8DBE2',
   success: '#4CB944',
+  clearGray: '#F8F8F8',
   transparent: 'transparent',
   lightgray: 'lightgray',
   gradientLight: ['#FCF7F8', '#FCF7F8'],

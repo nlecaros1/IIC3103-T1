@@ -3,8 +3,13 @@
 import React, { useState, useLayoutEffect } from 'react';
 import { useHistory } from 'react-router';
 import { Container,  Panel, Button} from 'rsuite';
+import colors from '../styles/colors';
+import Show from './show';
 
-const Home = ({}) => {
+const Home = ({
+  location,
+  commonApiUrl,
+}) => {
   const useMediaQuery = () => {
     const [screenSize, setScreenSize] = useState([0, 0]);
     useLayoutEffect(() => {
@@ -19,17 +24,21 @@ const Home = ({}) => {
   };
 
   const [width, height] = useMediaQuery();
-  const history = useHistory();
+  const openedShow = location?.state?.show;
+  const [isBreakingBadOpen, setIsBreakingBadOpen] = useState(openedShow === 'Breaking Bad');
+  const [isBetterCallSaulOpen, setIsBetterCallSaulOpen] = useState(openedShow === 'Better Call Saul');
 
   const Card = ({
-    name, url, index, imageSource,height, width
+    name, index, imageSource,height, width
   }) => (
     <Button
       appearance="subtle"
       key={index}
       style={styles.card}
       onClick={() => {
-        history.push(url, { name });
+        name === 'Breaking Bad' 
+         ? setIsBreakingBadOpen(!isBreakingBadOpen)
+         : setIsBetterCallSaulOpen(!isBetterCallSaulOpen);
       }}
     >
       <Panel
@@ -62,6 +71,15 @@ const Home = ({}) => {
           height={height/2 - 50}
           width={width}
         />
+        {isBreakingBadOpen && (
+          <Container style={styles.show}>
+            <Show 
+              commonApiUrl={commonApiUrl} 
+              season={openedShow === 'Breaking Bad' ? location?.state?.season : undefined}
+              showName='Breaking Bad'
+            />
+         </Container>
+         )}
         <Card 
           name="Better Call Saul"
           url="/show/Better+Call+Saul"
@@ -70,6 +88,15 @@ const Home = ({}) => {
           height={height/2 - 50}
           width={width}
         />
+        {isBetterCallSaulOpen && (
+          <Container style={styles.show}>
+            <Show 
+              commonApiUrl={commonApiUrl} 
+              season={openedShow === 'Better Call Saul' ? location?.state?.season : undefined}
+              showName='Better Call Saul'
+            />
+         </Container>
+         )}
       </Container>
     </Container>
   )
@@ -85,6 +112,7 @@ const styles = {
   },
   image: { objectFit: 'cover', filter: 'brightness(70%)', alignSelf: 'center' },
   title: { textAlign: 'center', fontSize: 20,  alignSelf: 'center', justifySelf: 'center' },
+  show: { margin: 20, borderRadius: 10, backgroundColor: colors.clearGray, padding: 10}
 };
 
 export default Home;

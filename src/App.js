@@ -34,7 +34,7 @@ const App = () => {
               />
             )}
           />
-          <Route
+          {/* <Route
             path="/show/:id"
             render={(props) => (
               <Show
@@ -42,7 +42,7 @@ const App = () => {
                 {...props}
               />
             )}
-          />
+          /> */}
           <Route
             path="/episode/:id"
             render={(props) => (

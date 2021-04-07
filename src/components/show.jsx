@@ -3,12 +3,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Container, Loader, Button, Panel, ButtonToolbar, ButtonGroup, Alert, } from 'rsuite';
 import axios from 'axios'
-import { useHistory, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import moment from 'moment';
 import colors from '../styles/colors';
 
 const Show = ({
-  commonApiUrl, location,
+  commonApiUrl, season, showName,
 }) => {
   const useMediaQuery = () => {
     const [screenSize, setScreenSize] = useState([0, 0]);
@@ -25,16 +25,12 @@ const Show = ({
 
   const [width, height] = useMediaQuery();
   const history = useHistory()
-  const params = useParams();
-  let expandedSeason = location?.state?.season;
+  let expandedSeason = season;
   if (expandedSeason) {
     expandedSeason = parseInt(expandedSeason) - 1;
   }
-  const {id: formattedName } = params;
-  const name = formattedName.replace(/\+/g, ' ');
-  if (name !=='Breaking Bad' && name !== 'Better Call Saul') {
-    Alert.error(`No existe el show '${name}'. Se muestra Better Call Saul.`)
-  }
+  const formattedName = showName.replace(/ /g, '+');;
+  const name = showName
   const url = `${commonApiUrl}/episodes?series=${formattedName}`
   const [isLoading, setIsLoading] = useState(true);
   const [seasons, setSeasons] = useState({});
@@ -172,17 +168,6 @@ const Show = ({
       </Container>
     : (
       <Container>
-        <Card 
-          name={name}
-          imageSource={
-            name === 'Breaking Bad'
-            ? "/images/breaking_bad.jpeg"
-            : "/images/better_call_saul.jpeg"
-          }
-          index="1"
-          height={height/2 - 50}
-          width={width}
-        />
         <Container style={{flexDirection: 'row'}}>
           <Container style={{flex: 1}}> 
             <h2 style={styles.textCenter}>Temporadas</h2>

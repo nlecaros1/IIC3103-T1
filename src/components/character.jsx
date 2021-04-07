@@ -80,11 +80,14 @@ const Character = ({
   [params]);
 
   const handleSeasonClick = (season) => {
-    history.push(`/show/${isBreakingBadSeason ? 'Breaking+Bad' : 'Better+Call+Saul'}`, { season })
+    history.push('/', { 
+      season,
+      show: isBreakingBadSeason ? 'Breaking Bad' : 'Better Call Saul' })
   }
 
   const handleShowClick = (show) => {
-    history.push(`/show/${show.replace(/ /g, '+')}`);
+    history.push('/', { 
+      show: isBreakingBadSeason ? 'Breaking Bad' : 'Better Call Saul' })
   }
 
   const handleChangeShowSeasonClick = (appearanceToUse, mode) => {
