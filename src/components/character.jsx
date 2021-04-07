@@ -83,6 +83,10 @@ const Character = ({
     history.push(`/show/${isBreakingBadSeason ? 'Breaking+Bad' : 'Better+Call+Saul'}`, { season })
   }
 
+  const handleShowClick = (show) => {
+    history.push(`/show/${show.replace(/ /g, '+')}`);
+  }
+
   const handleChangeShowSeasonClick = (appearanceToUse, mode) => {
     setAppearance(appearanceToUse);
     setIsBreakingBadSeason(mode === 'Breaking Bad')
@@ -180,7 +184,7 @@ const Character = ({
                     {quotes.length ? (
                       <Container style={styles.buttons}>
                         {quotes.map((item, index) => (
-                          <p key={index.toString()} index={index} style={{ fontStyle: 'italic' }}>
+                          <p key={index.toString()} index={index} style={{ fontStyle: 'italic' }} onClick={() => handleShowClick(item.series)}>
                             - "{item.quote}" - {item.series}
                           </p>
                         ))}
