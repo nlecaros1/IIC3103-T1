@@ -10,32 +10,50 @@ const Character = ({
 }) => {
   const params = useParams();
   const history = useHistory();
-
   const { id: formattedName } = params; 
-
   const name = formattedName.replace(/\+/g, ' ');
   const show = location?.state?.show ? location.state.show : 'Breaking Bad';
-  const [isBreakingBad, setIsBreakingBad] = useState(show === 'Breaking Bad');
-  const [breakingBadAppearance, setBreakingBadAppearance] = useState([]);
-  const [betterCallSaulAppearance, setBetterCallSaulAppearance] = useState([]);
+  const isBreakingBad = show === 'Breaking Bad';
+  const [isBreakingBadSeason, setIsBreakingBadSeason] = useState(isBreakingBad);
   const [isLoading, setIsLoading] = useState(true);
   const [isEmpty, setIsEmpty] = useState(false);
-  
+  const [breakingBadAppearance, setBreakingBadAppearance] = useState([]);
+  const [betterCallSaulAppearance, setBetterCallSaulAppearance] = useState([]);
   const [appearance, setAppearance] = useState('');
+  const [quotes, setQuotes] = useState([]);
   const [img, setImg] = useState('');
   const [nickname, setNickname] = useState('');
   const [occupation, setOccupation] = useState('');
   const [portrayed, setPortrayed] = useState('');
   const [status, setStatus] = useState('');
 
-  const url = `${commonApiUrl}/characters?name=${formattedName}`;
+  const charactersUrl = `${commonApiUrl}/characters?name=${formattedName}`;
 
-  useEffect(() => {
+  const quotesUrl = `${commonApiUrl}/quote?author=${formattedName}`
+
+  const loadCharacter = () => ( axios.get(charactersUrl) )
+
+  const loadQuotes = () => ( axios.get(quotesUrl) )
+
+
+  useEffect( () => {
     setIsLoading(true);
-    axios.get(url)
-      .then((response) => {
-        if (response.data.length) {
-          const character = response.data[0];
+    const getData = async () => {
+      await Promise.all([
+        loadCharacter(),
+        loadQuotes('Breaking Bad'),
+        loadQuotes('Better Call Saul'),
+      ])
+      .then((values) => {
+        const [
+          characterResponse,
+          quotesResponse,
+        ] = [
+          values[0].data,
+          values[1].data,
+        ];
+        if (characterResponse.length) {
+          const character = characterResponse[0];
           setBreakingBadAppearance(character.appearance);
           setBetterCallSaulAppearance(character.better_call_saul_appearance);
           setAppearance(isBreakingBad ? character.appearance : character.better_call_saul_appearance);
@@ -47,25 +65,31 @@ const Character = ({
         } else {
           setIsEmpty(true)
         }
+        if (quotesResponse.length) {
+          setQuotes(quotesResponse);
+        }
         setIsLoading(false);
       })
       .catch((error) => {
         history.push('/error', { error })
+
       });
+    }
+    getData()
   },
   [params]);
 
   const handleSeasonClick = (season) => {
-    history.push(`/show/${isBreakingBad ? 'Breaking+Bad' : 'Better+Call+Saul'}`, { season })
+    history.push(`/show/${isBreakingBadSeason ? 'Breaking+Bad' : 'Better+Call+Saul'}`, { season })
   }
 
-  const handleChangeShowClick = (appearanceToUse, mode) => {
+  const handleChangeShowSeasonClick = (appearanceToUse, mode) => {
     setAppearance(appearanceToUse);
-    setIsBreakingBad(mode === 'Breaking Bad')
+    setIsBreakingBadSeason(mode === 'Breaking Bad')
   }
 
   const getImageDimensions = () => {
-    const height = 20 * occupation.length + 8 * (occupation.length - 1)  + 34 + 187 + 20
+    const height = 20 * occupation.length + 8 * (occupation.length - 1)  + 34 + 187 + 40
     return height;
   }
 
@@ -118,15 +142,15 @@ const Character = ({
                     <ButtonToolbar style={styles.buttons}>
                       <ButtonGroup>
                         <Button
-                          active={isBreakingBad}
+                          active={isBreakingBadSeason}
                           appearance="default"
-                          onClick={() => handleChangeShowClick(breakingBadAppearance, 'Breaking Bad')}
+                          onClick={() => handleChangeShowSeasonClick(breakingBadAppearance, 'Breaking Bad')}
                           >Breaking Bad
                         </Button>
                         <Button
-                          active={!isBreakingBad}
+                          active={!isBreakingBadSeason}
                           appearance="default"
-                          onClick={() => handleChangeShowClick(betterCallSaulAppearance, 'Better Call Saul')}
+                          onClick={() => handleChangeShowSeasonClick(betterCallSaulAppearance, 'Better Call Saul')}
                           >
                           Better Call Saul
                         </Button>
@@ -147,6 +171,28 @@ const Character = ({
                   </Container>
                 </Container>
               </Container>
+
+              <Container>
+                <Container style={styles.quotesContainer}>
+                  <h4 style={styles.text}>Frases</h4>
+                  <Container>
+                    <Divider />
+                    {quotes.length ? (
+                      <Container style={styles.buttons}>
+                        {quotes.map((item, index) => (
+                          <p key={index.toString()} index={index} style={{ fontStyle: 'italic' }}>
+                            - "{item.quote}" - {item.series}
+                          </p>
+                        ))}
+                      </Container>
+                    ): (
+                      <p style={styles.text}>No tiene ninguna.</p>
+                    )}
+                  </Container>
+                </Container>
+              </Container>
+
+
             </Container>
           )}
         </Container>
@@ -162,10 +208,20 @@ const styles = {
   image: {borderTopRightRadius: 10, borderBottomRightRadius: 10, alignSelf: 'flex-end'},
   informationText: { marginLeft: 10 },
   informationContainer: { backgroundColor: colors.black, margin: 10 },
-  generalInformationContainer: { padding: 10 },
-  imageAndInformationContainer: { flexDirection: 'row', borderRadius: 10, backgroundColor: colors.black, color: colors.white },
+  generalInformationContainer: {
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 10,
+  },
+  imageAndInformationContainer: {
+    flexDirection: 'row',
+    borderRadius: 10,
+    backgroundColor: colors.black,
+    color: colors.white,
+  },
   generalContainer: { margin: 10 },
-
+  quotesContainer: { marginTop: 20, padding: 20, color: colors.white, backgroundColor: colors.black, borderRadius: 10 },
 }
 
 export default Character;
