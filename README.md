@@ -1,7 +1,7 @@
 # IIC3103 - Tarea 1
 Tarea con fines académicos para el curso Taller de Integración 2021-1 del alumno Nicolás Lecaros.
 
-El sitio se encuentra publicado en el siguiente [link](https://say-my-name-wiki-app.herokuapp.com/)
+El sitio se encuentra publicado en el siguiente [link](https://say-my-name-pedia.herokuapp.com/)
 
 # Paquetes y librerías utilizadas
 - React
