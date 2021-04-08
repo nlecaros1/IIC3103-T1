@@ -8,7 +8,7 @@ import moment from 'moment';
 import colors from '../styles/colors';
 
 const Show = ({
-  commonApiUrl, season, showName,
+  commonApiUrl, season, showName, isMobile,
 }) => {
   const useMediaQuery = () => {
     const [screenSize, setScreenSize] = useState([0, 0]);
@@ -145,16 +145,21 @@ const Show = ({
               >
                 {episode.label}
             </Button>
-            <Button
-              key={episode.value.toString() + '-3'}
-              appearance={'subtle'}>
-                {episode.characters.length}
-            </Button>
-            <Button
-              key={episode.value.toString() + '-4'}
-              appearance={'subtle'}>
-                {moment(episode.air_date).format('DD/MM/YYYY')}
-            </Button>
+            {!isMobile && (
+
+              <Button
+                key={episode.value.toString() + '-3'}
+                appearance={'subtle'}>
+                  {episode.characters.length}
+              </Button>
+            )}
+            {!isMobile && (
+                <Button
+                key={episode.value.toString() + '-4'}
+                appearance={'subtle'}>
+                  {moment(episode.air_date).format('DD/MM/YYYY')}
+              </Button>
+            )}
           </ButtonGroup>
     </ButtonToolbar>
     )
@@ -168,7 +173,7 @@ const Show = ({
       </Container>
     : (
       <Container>
-        <Container style={{flexDirection: 'row'}}>
+        <Container style={{flexDirection: isMobile ? 'column' : 'row'}}>
           <Container style={{flex: 1}}> 
             <h2 style={styles.textCenter}>Temporadas</h2>
             <Button appearance="subtle" style={{color: colors.white}} onClick={() => setSelectedSeason('')}>''</Button>
@@ -198,14 +203,18 @@ const Show = ({
                         >
                           Nombre
                         </Button>
-                      <Button>
-                        # Personajes
-                      </Button>
+                      {!isMobile && (
+                        <Button>
+                          # Personajes
+                        </Button>
+                      )}
+                    {!isMobile && (
                       <Button
                         appearance={'default'}
                         >
                         Lanzamiento
                       </Button>
+                      )}
                     </ButtonGroup>
                 </ButtonToolbar>
               {

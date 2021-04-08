@@ -61,7 +61,7 @@ const Episode = ({
           </Container>
           <Container style={styles.information}>
             <Container>
-              <p onClick={() => history.push(`/show/${serie.replace(/ /g, '+')}`, { season })}>
+              <p onClick={() => history.push('/', { show: serie, season })}>
                 Temporada:
                 {' '}
                 {season}
@@ -78,7 +78,7 @@ const Episode = ({
                 {' '}
                 {moment(airDate).format('DD/MM/YYYY')}
               </p>
-              <p onClick={() => history.push(`/show/${serie.replace(/ /g, '+')}`)}>
+              <p onClick={() => history.push('/', { show: serie })}>
                 Serie:
                 {' '}
                 {serie}

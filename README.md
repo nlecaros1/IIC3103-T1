@@ -13,6 +13,7 @@ El sitio se encuentra publicado en el siguiente [link](https://say-my-name-wiki-
 
 # Copyright
  - Se utiliza una función llamada `useMediaQuery` obtenida de [Stack Overflow](https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react), la cual permite obtener en cada momento el tamaño de la pantalla.
+ - Se utiliza `isMobile` obtenida de [Stack Overflow](https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react), la cual permite obtener si el dispositivo es un celular.
  - Se utiliza las imágenes de:
     - [Breaking Bad](https://i.blogs.es/6d84c8/breaking-bad/1366_2000.jpg)
     - [Better Call Saul](http://www.srgeekarg.com/wp-content/uploads/2020/04/Better-Call-Saul-temporada-cinco-min.jpg)
